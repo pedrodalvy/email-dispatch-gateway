@@ -12,59 +12,61 @@ var (
 	emails  = []string{"a@domain.com", "b@domain.com"}
 )
 
-func Test_NewCampaign_CreateCampaign(t *testing.T) {
-	// ACT
-	campaign, err := NewCampaign(name, content, emails)
+func Test_Campaign_NewCampaign(t *testing.T) {
+	t.Run("should create campaign", func(t *testing.T) {
+		// ACT
+		campaign, err := NewCampaign(name, content, emails)
 
-	// ASSERT
-	require.Equal(t, name, campaign.Name)
-	require.Equal(t, content, campaign.Content)
-	require.Equal(t, len(emails), len(campaign.Contacts))
-	require.Empty(t, err)
-}
+		// ASSERT
+		require.Equal(t, name, campaign.Name)
+		require.Equal(t, content, campaign.Content)
+		require.Equal(t, len(emails), len(campaign.Contacts))
+		require.Empty(t, err)
+	})
 
-func Test_NewCampaign_IDIsNotEmpty(t *testing.T) {
-	// ACT
-	campaign, _ := NewCampaign(name, content, emails)
+	t.Run("should return a campaign ID", func(t *testing.T) {
+		// ACT
+		campaign, _ := NewCampaign(name, content, emails)
 
-	// ASSERT
-	require.NotEmpty(t, campaign.ID)
-}
+		// ASSERT
+		require.NotEmpty(t, campaign.ID)
+	})
 
-func Test_NewCampaign_CreatedOnMustBeNow(t *testing.T) {
-	// ARRANGE
-	now := time.Now().Add(-time.Minute)
+	t.Run("should return a valid createdOn time", func(t *testing.T) {
+		// ARRANGE
+		now := time.Now().Add(-time.Minute)
 
-	// ACT
-	campaign, _ := NewCampaign(name, content, emails)
+		// ACT
+		campaign, _ := NewCampaign(name, content, emails)
 
-	// ASSERT
-	require.Greater(t, campaign.CreatedOn, now)
-}
+		// ASSERT
+		require.Greater(t, campaign.CreatedOn, now)
+	})
 
-func Test_NewCampaign_MustValidateName(t *testing.T) {
-	// ACT
-	campaign, err := NewCampaign("", content, emails)
+	t.Run("should validate name", func(t *testing.T) {
+		// ACT
+		campaign, err := NewCampaign("", content, emails)
 
-	// ASSERT
-	require.Equal(t, "name is required", err.Error())
-	require.Empty(t, campaign)
-}
+		// ASSERT
+		require.Equal(t, "name is required", err.Error())
+		require.Empty(t, campaign)
+	})
 
-func Test_NewCampaign_MustValidateContent(t *testing.T) {
-	// ACT
-	campaign, err := NewCampaign(name, "", emails)
+	t.Run("should validate content", func(t *testing.T) {
+		// ACT
+		campaign, err := NewCampaign(name, "", emails)
 
-	// ASSERT
-	require.Equal(t, "content is required", err.Error())
-	require.Empty(t, campaign)
-}
+		// ASSERT
+		require.Equal(t, "content is required", err.Error())
+		require.Empty(t, campaign)
+	})
 
-func Test_NewCampaign_MustValidateContacts(t *testing.T) {
-	// ACT
-	campaign, err := NewCampaign(name, content, []string{})
+	t.Run("should validate contacts", func(t *testing.T) {
+		// ACT
+		campaign, err := NewCampaign(name, content, []string{})
 
-	// ASSERT
-	require.Equal(t, "contacts is required", err.Error())
-	require.Empty(t, campaign)
+		// ASSERT
+		require.Equal(t, "contacts is required", err.Error())
+		require.Empty(t, campaign)
+	})
 }
