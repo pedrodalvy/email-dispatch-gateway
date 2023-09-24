@@ -4,6 +4,7 @@ import (
 	"email-dispatch-gateway/internal/contract"
 	"email-dispatch-gateway/internal/domain/campaign"
 	mock "email-dispatch-gateway/internal/domain/campaign/mock"
+	internalerrors "email-dispatch-gateway/internal/internal-errors"
 	"errors"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -65,15 +66,15 @@ func Test_Service_Create(t *testing.T) {
 		require.Empty(t, err)
 	})
 
-	t.Run("should return an error when a repository error occurs", func(t *testing.T) {
+	t.Run("should return an internal error when a repository error occurs", func(t *testing.T) {
 		// ARRANGE
-		repository.EXPECT().Save(gomock.Any()).Return(errors.New("repository error"))
+		repository.EXPECT().Save(gomock.Any()).Return(errors.New("any repository error"))
 
 		// ACT
 		id, err := service.Create(newCampaignDTO)
 
 		// ASSERT
 		require.Empty(t, id)
-		require.Equal(t, "repository error", err.Error())
+		require.Equal(t, internalerrors.ErrInternalServerError, err)
 	})
 }
