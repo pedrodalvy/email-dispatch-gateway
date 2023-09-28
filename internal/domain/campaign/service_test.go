@@ -4,7 +4,7 @@ import (
 	"email-dispatch-gateway/internal/contract"
 	"email-dispatch-gateway/internal/domain/campaign"
 	mock "email-dispatch-gateway/internal/domain/campaign/mock"
-	internalerrors "email-dispatch-gateway/internal/internal-errors"
+	internalErrors "email-dispatch-gateway/internal/internal-errors"
 	"errors"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -47,6 +47,7 @@ func Test_Service_Create(t *testing.T) {
 		// ASSERT
 		require.Empty(t, id)
 		require.Error(t, err)
+		require.NotEqual(t, internalErrors.ErrInternalServerError, err)
 	})
 
 	t.Run("should call Repository.Save with correct arguments", func(t *testing.T) {
@@ -75,6 +76,6 @@ func Test_Service_Create(t *testing.T) {
 
 		// ASSERT
 		require.Empty(t, id)
-		require.Equal(t, internalerrors.ErrInternalServerError, err)
+		require.Equal(t, internalErrors.ErrInternalServerError, err)
 	})
 }

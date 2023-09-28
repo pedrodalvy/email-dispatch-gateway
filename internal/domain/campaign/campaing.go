@@ -1,47 +1,42 @@
 package campaign
 
 import (
-	"errors"
+	internalErrors "email-dispatch-gateway/internal/internal-errors"
 	"github.com/rs/xid"
 	"time"
 )
 
 type Contact struct {
-	Email string
+	Email string `validate:"email"`
 }
 
 type Campaign struct {
-	ID        string
-	Name      string
-	CreatedOn time.Time
-	Content   string
-	Contacts  []Contact
+	ID        string    `validate:"required"`
+	Name      string    `validate:"min=5,max=24"`
+	CreatedOn time.Time `validate:"required"`
+	Content   string    `validate:"min=5,max=1024"`
+	Contacts  []Contact `validate:"gte=1,dive"`
 }
 
 func NewCampaign(name string, content string, emails []string) (campaign *Campaign, err error) {
-	if name == "" {
-		return campaign, errors.New("name is required")
-	}
-
-	if content == "" {
-		return campaign, errors.New("content is required")
-	}
-
-	if len(emails) == 0 {
-		return campaign, errors.New("contacts is required")
-	}
-
 	contacts := make([]Contact, len(emails))
 
 	for index, email := range emails {
 		contacts[index].Email = email
 	}
 
-	return &Campaign{
+	campaign = &Campaign{
 		ID:        xid.New().String(),
 		Name:      name,
 		Content:   content,
 		Contacts:  contacts,
 		CreatedOn: time.Now(),
-	}, err
+	}
+
+	err = internalErrors.ValidateStruct(campaign)
+	if err != nil {
+		return nil, err
+	}
+
+	return campaign, nil
 }
