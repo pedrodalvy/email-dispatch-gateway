@@ -1,0 +1,14 @@
+### POST /campaigns
+# @no-log
+POST http://localhost:3000/campaigns
+Content-Type: application/json
+
+{
+  "name": "Campaign Name",
+  "content": "Campaign Content",
+  "emails": [
+    "email_a@domain.com",
+    "email_b@domain.com",
+    "email_c@domain.com"
+  ]
+}
