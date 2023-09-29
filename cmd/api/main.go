@@ -4,7 +4,7 @@ import (
 	"email-dispatch-gateway/internal/contract"
 	"email-dispatch-gateway/internal/domain/campaign"
 	"email-dispatch-gateway/internal/infrastructure/database"
-	internalerrors "email-dispatch-gateway/internal/internal-errors"
+	internalErrors "email-dispatch-gateway/internal/internal-errors"
 	"errors"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -30,7 +30,7 @@ func main() {
 		id, err := service.Create(campaignDTO)
 		if err != nil {
 			status := http.StatusBadRequest
-			if errors.Is(err, internalerrors.ErrInternalServerError) {
+			if errors.Is(err, internalErrors.ErrInternalServerError) {
 				status = http.StatusInternalServerError
 			}
 
