@@ -100,4 +100,12 @@ func Test_Campaign_NewCampaign(t *testing.T) {
 		require.Equal(t, "email is invalid", err.Error())
 		require.Empty(t, campaign)
 	})
+
+	t.Run("should create a campaign with status pending", func(t *testing.T) {
+		// ACT
+		campaign, _ := NewCampaign(name, content, emails)
+
+		// ASSERT
+		require.Equal(t, Pending, campaign.Status)
+	})
 }
