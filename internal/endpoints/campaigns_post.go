@@ -11,6 +11,9 @@ func (h *Handler) CampaignsPost(_ http.ResponseWriter, r *http.Request) (respons
 	render.DecodeJSON(r.Body, &campaignDTO)
 
 	id, err := h.CampaignService.Create(campaignDTO)
+	if err == nil {
+		responseData = map[string]string{"id": id}
+	}
 
-	return map[string]string{"id": id}, http.StatusCreated, err
+	return responseData, http.StatusCreated, err
 }
