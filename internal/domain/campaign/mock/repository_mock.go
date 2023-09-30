@@ -38,6 +38,20 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
+// Create mocks base method.
+func (m *MockRepository) Create(campaign *campaign.Campaign) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", campaign)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockRepositoryMockRecorder) Create(campaign any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepository)(nil).Create), campaign)
+}
+
 // GetByID mocks base method.
 func (m *MockRepository) GetByID(id string) (*campaign.Campaign, error) {
 	m.ctrl.T.Helper()
@@ -51,20 +65,6 @@ func (m *MockRepository) GetByID(id string) (*campaign.Campaign, error) {
 func (mr *MockRepositoryMockRecorder) GetByID(id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockRepository)(nil).GetByID), id)
-}
-
-// Save mocks base method.
-func (m *MockRepository) Save(campaign *campaign.Campaign) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Save", campaign)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Save indicates an expected call of Save.
-func (mr *MockRepositoryMockRecorder) Save(campaign any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockRepository)(nil).Save), campaign)
 }
 
 // Update mocks base method.

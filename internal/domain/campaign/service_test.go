@@ -26,7 +26,7 @@ func Test_Service_Create(t *testing.T) {
 
 	t.Run("should create campaign", func(t *testing.T) {
 		// ARRANGE
-		repository.EXPECT().Save(gomock.Any()).Return(nil)
+		repository.EXPECT().Create(gomock.Any()).Return(nil)
 
 		// ACT
 		id, err := service.Create(newCampaignDTO)
@@ -50,9 +50,9 @@ func Test_Service_Create(t *testing.T) {
 		require.NotEqual(t, internalErrors.ErrInternalServerError, err)
 	})
 
-	t.Run("should call Repository.Save with correct arguments", func(t *testing.T) {
+	t.Run("should call Repository.Create with correct arguments", func(t *testing.T) {
 		// ARRANGE
-		repository.EXPECT().Save(gomock.Cond(func(arguments any) bool {
+		repository.EXPECT().Create(gomock.Cond(func(arguments any) bool {
 			return arguments.(*campaign.Campaign).ID != "" &&
 				arguments.(*campaign.Campaign).Name == newCampaignDTO.Name &&
 				arguments.(*campaign.Campaign).Content == newCampaignDTO.Content &&
@@ -69,7 +69,7 @@ func Test_Service_Create(t *testing.T) {
 
 	t.Run("should return an internal error when a repository error occurs", func(t *testing.T) {
 		// ARRANGE
-		repository.EXPECT().Save(gomock.Any()).Return(errors.New("any repository error"))
+		repository.EXPECT().Create(gomock.Any()).Return(errors.New("any repository error"))
 
 		// ACT
 		id, err := service.Create(newCampaignDTO)

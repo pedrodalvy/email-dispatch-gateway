@@ -19,7 +19,7 @@ func (s *Service) Create(dto contract.NewCampaignDTO) (id string, err error) {
 		return "", err
 	}
 
-	err = s.Repository.Save(campaign)
+	err = s.Repository.Create(campaign)
 	if err != nil {
 		return "", internalerrors.ErrInternalServerError
 	}

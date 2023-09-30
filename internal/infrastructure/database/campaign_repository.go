@@ -13,7 +13,7 @@ func NewCampaignRepository(db *gorm.DB) *CampaignRepository {
 	return &CampaignRepository{DB: db}
 }
 
-func (cr *CampaignRepository) Save(campaign *campaign.Campaign) error {
+func (cr *CampaignRepository) Create(campaign *campaign.Campaign) error {
 	tx := cr.DB.Create(campaign)
 	return tx.Error
 }
