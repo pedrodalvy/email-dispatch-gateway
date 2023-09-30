@@ -119,3 +119,63 @@ func Test_Service_GetByID(t *testing.T) {
 		require.Equal(t, internalErrors.ErrInternalServerError, err)
 	})
 }
+
+func Test_Service_CancelByID(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := mock.NewMockRepository(ctrl)
+	service := campaign.NewService(repository)
+
+	t.Run("should cancel a campaign", func(t *testing.T) {
+		// ARRANGE
+		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		repository.EXPECT().GetByID(gomock.Eq(c.ID)).Return(c, nil)
+		repository.EXPECT().Update(gomock.Eq(c)).Return(nil)
+
+		// ACT
+		err := service.CancelByID(c.ID)
+
+		// ASSERT
+		require.Nil(t, err)
+	})
+
+	t.Run("should return an internal server error if repository.GetByID returns an error", func(t *testing.T) {
+		// ARRANGE
+		campaignID := "any"
+		repository.EXPECT().GetByID(gomock.Eq(campaignID)).Return(&campaign.Campaign{}, errors.New("any repository error"))
+
+		// ACT
+		err := service.CancelByID(campaignID)
+
+		// ASSERT
+		require.Equal(t, internalErrors.ErrInternalServerError, err)
+	})
+
+	t.Run("should return a domain error", func(t *testing.T) {
+		// ARRANGE
+		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		c.Cancel()
+		repository.EXPECT().GetByID(gomock.Eq(c.ID)).Return(c, nil)
+
+		// ACT
+		err := service.CancelByID(c.ID)
+
+		// ASSERT
+		require.Error(t, err)
+		require.NotEqual(t, internalErrors.ErrInternalServerError, err)
+	})
+
+	t.Run("should return an internal server error if repository.Update returns an error", func(t *testing.T) {
+		// ARRANGE
+		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		repository.EXPECT().GetByID(gomock.Eq(c.ID)).Return(c, nil)
+		repository.EXPECT().Update(gomock.Eq(c)).Return(errors.New("any repository error"))
+
+		// ACT
+		err := service.CancelByID(c.ID)
+
+		// ASSERT
+		require.Equal(t, internalErrors.ErrInternalServerError, err)
+	})
+}

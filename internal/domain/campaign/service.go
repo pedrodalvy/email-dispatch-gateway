@@ -40,3 +40,22 @@ func (s *Service) GetByID(id string) (contract.CampaignResponse, error) {
 		Status:  campaign.Status,
 	}, nil
 }
+
+func (s *Service) CancelByID(id string) (err error) {
+	campaign, err := s.Repository.GetByID(id)
+	if err != nil {
+		return internalerrors.ErrInternalServerError
+	}
+
+	err = campaign.Cancel()
+	if err != nil {
+		return err
+	}
+
+	err = s.Repository.Update(campaign)
+	if err != nil {
+		return internalerrors.ErrInternalServerError
+	}
+
+	return nil
+}

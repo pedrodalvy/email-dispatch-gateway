@@ -2,8 +2,14 @@ package campaign
 
 import (
 	internalErrors "email-dispatch-gateway/internal/internal-errors"
+	"errors"
 	"github.com/rs/xid"
 	"time"
+)
+
+const (
+	Pending  string = "Pending"
+	Canceled string = "Canceled"
 )
 
 type Contact struct {
@@ -11,10 +17,6 @@ type Contact struct {
 	Email      string `validate:"email" gorm:"size:100"`
 	CampaignID string `gorm:"size:20"`
 }
-
-const (
-	Pending string = "Pending"
-)
 
 type Campaign struct {
 	ID        string    `validate:"required" gorm:"size:50"`
@@ -48,4 +50,13 @@ func NewCampaign(name string, content string, emails []string) (campaign *Campai
 	}
 
 	return campaign, nil
+}
+
+func (c *Campaign) Cancel() error {
+	if c.Status != Pending {
+		return errors.New("campaign status is invalid")
+	}
+
+	c.Status = Canceled
+	return nil
 }

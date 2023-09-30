@@ -22,3 +22,8 @@ func (cr *CampaignRepository) GetByID(id string) (campaign *campaign.Campaign, e
 	tx := cr.DB.First(&campaign, "id = ?", id)
 	return campaign, tx.Error
 }
+
+func (cr *CampaignRepository) Update(campaign *campaign.Campaign) error {
+	tx := cr.DB.Save(campaign)
+	return tx.Error
+}

@@ -109,3 +109,29 @@ func Test_Campaign_NewCampaign(t *testing.T) {
 		require.Equal(t, Pending, campaign.Status)
 	})
 }
+
+func Test_Campaign_Cancel(t *testing.T) {
+	t.Run("should cancel a campaign", func(t *testing.T) {
+		// ARRANGE
+		campaign, _ := NewCampaign(name, content, emails)
+
+		// ACT
+		err := campaign.Cancel()
+
+		// ASSERT
+		require.Nil(t, err)
+		require.Equal(t, Canceled, campaign.Status)
+	})
+
+	t.Run("should return an error if campaign status is invalid", func(t *testing.T) {
+		// ARRANGE
+		campaign, _ := NewCampaign(name, content, emails)
+		campaign.Cancel()
+
+		// ACT
+		err := campaign.Cancel()
+
+		// ASSERT
+		require.Equal(t, "campaign status is invalid", err.Error())
+	})
+}

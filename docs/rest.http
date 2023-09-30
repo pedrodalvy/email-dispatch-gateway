@@ -19,3 +19,8 @@ Content-Type: application/json
 ### GET /campaigns/:id
 # @no-log
 GET http://localhost:3000/campaigns/{{campaignId}}
+
+
+### PATCH /campaigns/:id/cancel
+# @no-log
+PATCH http://localhost:3000/campaigns/{{campaignId}}/cancel

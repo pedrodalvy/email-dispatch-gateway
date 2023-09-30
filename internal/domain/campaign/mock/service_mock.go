@@ -38,6 +38,20 @@ func (m *MockServiceInterface) EXPECT() *MockServiceInterfaceMockRecorder {
 	return m.recorder
 }
 
+// CancelByID mocks base method.
+func (m *MockServiceInterface) CancelByID(id string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CancelByID", id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CancelByID indicates an expected call of CancelByID.
+func (mr *MockServiceInterfaceMockRecorder) CancelByID(id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CancelByID", reflect.TypeOf((*MockServiceInterface)(nil).CancelByID), id)
+}
+
 // Create mocks base method.
 func (m *MockServiceInterface) Create(dto contract.NewCampaignDTO) (string, error) {
 	m.ctrl.T.Helper()
