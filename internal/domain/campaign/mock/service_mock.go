@@ -67,6 +67,20 @@ func (mr *MockServiceInterfaceMockRecorder) Create(dto any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockServiceInterface)(nil).Create), dto)
 }
 
+// DeleteByID mocks base method.
+func (m *MockServiceInterface) DeleteByID(id string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteByID", id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteByID indicates an expected call of DeleteByID.
+func (mr *MockServiceInterfaceMockRecorder) DeleteByID(id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByID", reflect.TypeOf((*MockServiceInterface)(nil).DeleteByID), id)
+}
+
 // GetByID mocks base method.
 func (m *MockServiceInterface) GetByID(id string) (contract.CampaignResponse, error) {
 	m.ctrl.T.Helper()

@@ -126,10 +126,49 @@ func Test_Campaign_Cancel(t *testing.T) {
 	t.Run("should return an error if campaign status is invalid", func(t *testing.T) {
 		// ARRANGE
 		campaign, _ := NewCampaign(name, content, emails)
-		campaign.Cancel()
+		campaign.Status = "another"
 
 		// ACT
 		err := campaign.Cancel()
+
+		// ASSERT
+		require.Equal(t, "campaign status is invalid", err.Error())
+	})
+}
+
+func Test_Campaign_Delete(t *testing.T) {
+	t.Run("should delete a campaign", func(t *testing.T) {
+		// ARRANGE
+		campaign, _ := NewCampaign(name, content, emails)
+
+		// ACT
+		err := campaign.Delete()
+
+		// ASSERT
+		require.Nil(t, err)
+		require.Equal(t, Deleted, campaign.Status)
+	})
+
+	t.Run("should delete a cancelled campaign", func(t *testing.T) {
+		// ARRANGE
+		campaign, _ := NewCampaign(name, content, emails)
+		campaign.Cancel()
+
+		// ACT
+		err := campaign.Delete()
+
+		// ASSERT
+		require.Nil(t, err)
+		require.Equal(t, Deleted, campaign.Status)
+	})
+
+	t.Run("should return an error if campaign status is invalid", func(t *testing.T) {
+		// ARRANGE
+		campaign, _ := NewCampaign(name, content, emails)
+		campaign.Status = "another"
+
+		// ACT
+		err := campaign.Delete()
 
 		// ASSERT
 		require.Equal(t, "campaign status is invalid", err.Error())

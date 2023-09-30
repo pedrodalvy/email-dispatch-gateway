@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func (h *Handler) CampaignsPatchCancelByID(_ http.ResponseWriter, r *http.Request) (campaignResponse interface{}, status int, err error) {
+func (h *Handler) CampaignsPatchCancelByID(_ http.ResponseWriter, r *http.Request) (responseData interface{}, status int, err error) {
 	id := chi.URLParam(r, "id")
 	err = h.CampaignService.CancelByID(id)
 

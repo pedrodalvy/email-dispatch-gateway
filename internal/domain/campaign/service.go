@@ -47,13 +47,28 @@ func (s *Service) CancelByID(id string) (err error) {
 		return internalerrors.ErrInternalServerError
 	}
 
-	err = campaign.Cancel()
-	if err != nil {
+	if err = campaign.Cancel(); err != nil {
 		return err
 	}
 
-	err = s.Repository.Update(campaign)
+	if err = s.Repository.Update(campaign); err != nil {
+		return internalerrors.ErrInternalServerError
+	}
+
+	return nil
+}
+
+func (s *Service) DeleteByID(id string) (err error) {
+	campaign, err := s.Repository.GetByID(id)
 	if err != nil {
+		return internalerrors.ErrInternalServerError
+	}
+
+	if err = campaign.Delete(); err != nil {
+		return err
+	}
+
+	if err = s.Repository.Delete(campaign); err != nil {
 		return internalerrors.ErrInternalServerError
 	}
 

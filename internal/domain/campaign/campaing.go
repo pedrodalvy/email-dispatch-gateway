@@ -10,6 +10,7 @@ import (
 const (
 	Pending  string = "Pending"
 	Canceled string = "Canceled"
+	Deleted  string = "Deleted"
 )
 
 type Contact struct {
@@ -58,5 +59,14 @@ func (c *Campaign) Cancel() error {
 	}
 
 	c.Status = Canceled
+	return nil
+}
+
+func (c *Campaign) Delete() error {
+	if c.Status != Pending && c.Status != Canceled {
+		return errors.New("campaign status is invalid")
+	}
+
+	c.Status = Deleted
 	return nil
 }

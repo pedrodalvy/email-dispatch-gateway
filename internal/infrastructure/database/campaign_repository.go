@@ -27,3 +27,8 @@ func (cr *CampaignRepository) Update(campaign *campaign.Campaign) error {
 	tx := cr.DB.Save(campaign)
 	return tx.Error
 }
+
+func (cr *CampaignRepository) Delete(campaign *campaign.Campaign) error {
+	tx := cr.DB.Select("Contacts").Delete(campaign)
+	return tx.Error
+}

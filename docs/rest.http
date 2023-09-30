@@ -24,3 +24,8 @@ GET http://localhost:3000/campaigns/{{campaignId}}
 ### PATCH /campaigns/:id/cancel
 # @no-log
 PATCH http://localhost:3000/campaigns/{{campaignId}}/cancel
+
+
+### DELETE /campaigns/:id
+# @no-log
+DELETE http://localhost:3000/campaigns/{{campaignId}}

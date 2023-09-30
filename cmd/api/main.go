@@ -25,6 +25,7 @@ func main() {
 	r.Post("/campaigns", endpoints.HandlerError(handler.CampaignsPost))
 	r.Get("/campaigns/{id}", endpoints.HandlerError(handler.CampaignsGetByID))
 	r.Patch("/campaigns/{id}/cancel", endpoints.HandlerError(handler.CampaignsPatchCancelByID))
+	r.Delete("/campaigns/{id}", endpoints.HandlerError(handler.CampaignsDeleteByID))
 
 	http.ListenAndServe(":3000", r)
 }
