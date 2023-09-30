@@ -79,3 +79,43 @@ func Test_Service_Create(t *testing.T) {
 		require.Equal(t, internalErrors.ErrInternalServerError, err)
 	})
 }
+
+func Test_Service_GetByID(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repository := mock.NewMockRepository(ctrl)
+	service := campaign.NewService(repository)
+
+	t.Run("should return a campaign", func(t *testing.T) {
+		// ARRANGE
+		newCampaign, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		expectedCampaign := contract.CampaignResponse{
+			ID:      newCampaign.ID,
+			Name:    newCampaign.Name,
+			Content: newCampaign.Content,
+			Status:  newCampaign.Status,
+		}
+
+		repository.EXPECT().GetByID(gomock.Eq(newCampaign.ID)).Return(newCampaign, nil)
+
+		// ACT
+		receivedCampaign, err := service.GetByID(newCampaign.ID)
+
+		// ASSERT
+		require.Equal(t, expectedCampaign, receivedCampaign)
+		require.Nil(t, err)
+	})
+
+	t.Run("should return an internal server error if repository returns an error", func(t *testing.T) {
+		// ARRANGE
+		repository.EXPECT().GetByID(gomock.Any()).Return(nil, errors.New("any repository error"))
+
+		// ACT
+		receivedCampaign, err := service.GetByID("any")
+
+		// ASSERT
+		require.Empty(t, receivedCampaign)
+		require.Equal(t, internalErrors.ErrInternalServerError, err)
+	})
+}

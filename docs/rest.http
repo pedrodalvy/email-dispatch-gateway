@@ -12,3 +12,10 @@ Content-Type: application/json
     "email_c@domain.com"
   ]
 }
+
+> {% client.global.set("campaignId", response.body["id"]) %}
+
+
+### GET /campaigns/:id
+# @no-log
+GET http://localhost:3000/campaigns/{{campaignId}}
