@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-func Test_Handler_CampaignsGet(t *testing.T) {
+func Test_Handler_CampaignsGetByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -40,7 +40,7 @@ func Test_Handler_CampaignsGet(t *testing.T) {
 		req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, chiContext))
 
 		// ACT
-		responseData, status, err := handler.CampaignsGet(res, req)
+		responseData, status, err := handler.CampaignsGetByID(res, req)
 
 		// ASSERT
 		require.Equal(t, campaignResponse, responseData)
@@ -61,7 +61,7 @@ func Test_Handler_CampaignsGet(t *testing.T) {
 		req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, chiContext))
 
 		// ACT
-		responseData, status, err := handler.CampaignsGet(res, req)
+		responseData, status, err := handler.CampaignsGetByID(res, req)
 
 		// ASSERT
 		require.Empty(t, responseData)

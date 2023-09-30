@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func (h *Handler) CampaignsGet(_ http.ResponseWriter, r *http.Request) (campaignResponse interface{}, status int, err error) {
+func (h *Handler) CampaignsGetByID(_ http.ResponseWriter, r *http.Request) (campaignResponse interface{}, status int, err error) {
 	id := chi.URLParam(r, "id")
 	campaignResponse, err = h.CampaignService.GetByID(id)
 
