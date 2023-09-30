@@ -19,7 +19,7 @@ func (cr *CampaignRepository) Create(campaign *campaign.Campaign) error {
 }
 
 func (cr *CampaignRepository) GetByID(id string) (campaign *campaign.Campaign, err error) {
-	tx := cr.DB.First(&campaign, "id = ?", id)
+	tx := cr.DB.Preload("Contacts").First(&campaign, "id = ?", id)
 	return campaign, tx.Error
 }
 

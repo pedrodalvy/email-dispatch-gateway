@@ -91,10 +91,11 @@ func Test_Service_GetByID(t *testing.T) {
 		// ARRANGE
 		newCampaign, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
 		expectedCampaign := contract.CampaignResponse{
-			ID:      newCampaign.ID,
-			Name:    newCampaign.Name,
-			Content: newCampaign.Content,
-			Status:  newCampaign.Status,
+			ID:                   newCampaign.ID,
+			Name:                 newCampaign.Name,
+			Content:              newCampaign.Content,
+			Status:               newCampaign.Status,
+			AmountOfEmailsToSend: len(newCampaign.Contacts),
 		}
 
 		repository.EXPECT().GetByID(gomock.Eq(newCampaign.ID)).Return(newCampaign, nil)
