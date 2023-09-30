@@ -1,0 +1,19 @@
+version: "3.8"
+
+volumes:
+  db:
+
+services:
+  postgres:
+    image: postgres:16.0-alpine3.18
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      TZ: 'GMT'
+      PGTZ: 'GMT'
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
