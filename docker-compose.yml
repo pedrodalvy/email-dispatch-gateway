@@ -1,19 +1,20 @@
 version: "3.8"
 
 volumes:
-  db:
+  postgres:
+    driver: local
 
 services:
   postgres:
-    image: postgres:16.0-alpine3.18
+    image: docker.io/bitnami/postgresql:16.0.0
     container_name: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      TZ: 'GMT'
-      PGTZ: 'GMT'
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
-      - db:/var/lib/postgresql/data
+      - 'postgres:/bitnami/postgresql'
+    environment:
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=email-dispatch-gateway
+      - POSTGRESQL_LOG_TIMEZONE=GMT
+      - POSTGRESQL_TIMEZONE=GMT
