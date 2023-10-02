@@ -119,6 +119,18 @@ func Test_Service_GetByID(t *testing.T) {
 		require.Empty(t, receivedCampaign)
 		require.Equal(t, internalErrors.ErrInternalServerError, err)
 	})
+
+	t.Run("should return a resource not found error if campaign does not exist", func(t *testing.T) {
+		// ARRANGE
+		repository.EXPECT().GetByID(gomock.Any()).Return(nil, nil)
+
+		// ACT
+		receivedCampaign, err := service.GetByID("any")
+
+		// ASSERT
+		require.Empty(t, receivedCampaign)
+		require.Equal(t, internalErrors.ErrResourceNotFound, err)
+	})
 }
 
 func Test_Service_CancelByID(t *testing.T) {
@@ -179,6 +191,17 @@ func Test_Service_CancelByID(t *testing.T) {
 		// ASSERT
 		require.Equal(t, internalErrors.ErrInternalServerError, err)
 	})
+
+	t.Run("should return a resource not found error if campaign does not exist", func(t *testing.T) {
+		// ARRANGE
+		repository.EXPECT().GetByID(gomock.Any()).Return(nil, nil)
+
+		// ACT
+		err := service.CancelByID("any")
+
+		// ASSERT
+		require.Equal(t, internalErrors.ErrResourceNotFound, err)
+	})
 }
 
 func Test_Service_DeleteByID(t *testing.T) {
@@ -238,5 +261,16 @@ func Test_Service_DeleteByID(t *testing.T) {
 
 		// ASSERT
 		require.Equal(t, internalErrors.ErrInternalServerError, err)
+	})
+
+	t.Run("should return a resource not found error if campaign does not exist", func(t *testing.T) {
+		// ARRANGE
+		repository.EXPECT().GetByID(gomock.Any()).Return(nil, nil)
+
+		// ACT
+		err := service.DeleteByID("any")
+
+		// ASSERT
+		require.Equal(t, internalErrors.ErrResourceNotFound, err)
 	})
 }

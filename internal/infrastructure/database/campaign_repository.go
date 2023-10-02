@@ -2,6 +2,7 @@ package database
 
 import (
 	"email-dispatch-gateway/internal/domain/campaign"
+	"errors"
 	"gorm.io/gorm"
 )
 
@@ -20,6 +21,11 @@ func (cr *CampaignRepository) Create(campaign *campaign.Campaign) error {
 
 func (cr *CampaignRepository) GetByID(id string) (campaign *campaign.Campaign, err error) {
 	tx := cr.DB.Preload("Contacts").First(&campaign, "id = ?", id)
+
+	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
 	return campaign, tx.Error
 }
 

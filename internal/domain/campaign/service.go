@@ -2,7 +2,7 @@ package campaign
 
 import (
 	"email-dispatch-gateway/internal/contract"
-	internalerrors "email-dispatch-gateway/internal/internal-errors"
+	internalErrors "email-dispatch-gateway/internal/internal-errors"
 )
 
 type Service struct {
@@ -21,16 +21,16 @@ func (s *Service) Create(dto contract.NewCampaignDTO) (id string, err error) {
 
 	err = s.Repository.Create(campaign)
 	if err != nil {
-		return "", internalerrors.ErrInternalServerError
+		return "", internalErrors.ErrInternalServerError
 	}
 
 	return campaign.ID, err
 }
 
 func (s *Service) GetByID(id string) (contract.CampaignResponse, error) {
-	campaign, err := s.Repository.GetByID(id)
+	campaign, err := s.findCampaignByID(id)
 	if err != nil {
-		return contract.CampaignResponse{}, internalerrors.ErrInternalServerError
+		return contract.CampaignResponse{}, err
 	}
 
 	return contract.CampaignResponse{
@@ -43,9 +43,9 @@ func (s *Service) GetByID(id string) (contract.CampaignResponse, error) {
 }
 
 func (s *Service) CancelByID(id string) (err error) {
-	campaign, err := s.Repository.GetByID(id)
+	campaign, err := s.findCampaignByID(id)
 	if err != nil {
-		return internalerrors.ErrInternalServerError
+		return err
 	}
 
 	if err = campaign.Cancel(); err != nil {
@@ -53,16 +53,16 @@ func (s *Service) CancelByID(id string) (err error) {
 	}
 
 	if err = s.Repository.Update(campaign); err != nil {
-		return internalerrors.ErrInternalServerError
+		return internalErrors.ErrInternalServerError
 	}
 
 	return nil
 }
 
 func (s *Service) DeleteByID(id string) (err error) {
-	campaign, err := s.Repository.GetByID(id)
+	campaign, err := s.findCampaignByID(id)
 	if err != nil {
-		return internalerrors.ErrInternalServerError
+		return err
 	}
 
 	if err = campaign.Delete(); err != nil {
@@ -70,8 +70,22 @@ func (s *Service) DeleteByID(id string) (err error) {
 	}
 
 	if err = s.Repository.Delete(campaign); err != nil {
-		return internalerrors.ErrInternalServerError
+		return internalErrors.ErrInternalServerError
 	}
 
 	return nil
+}
+
+func (s *Service) findCampaignByID(id string) (*Campaign, error) {
+	campaign, err := s.Repository.GetByID(id)
+
+	if err != nil {
+		return nil, internalErrors.ErrInternalServerError
+	}
+
+	if campaign == nil {
+		return nil, internalErrors.ErrResourceNotFound
+	}
+
+	return campaign, nil
 }

@@ -1,6 +1,6 @@
 ### POST /campaigns
 # @no-log
-POST http://localhost:3000/campaigns
+POST {{baseURL}}/campaigns
 Content-Type: application/json
 
 {
@@ -18,14 +18,14 @@ Content-Type: application/json
 
 ### GET /campaigns/:id
 # @no-log
-GET http://localhost:3000/campaigns/{{campaignId}}
+GET {{baseURL}}/campaigns/{{campaignId}}
 
 
 ### PATCH /campaigns/:id/cancel
 # @no-log
-PATCH http://localhost:3000/campaigns/{{campaignId}}/cancel
+PATCH {{baseURL}}/campaigns/{{campaignId}}/cancel
 
 
 ### DELETE /campaigns/:id
 # @no-log
-DELETE http://localhost:3000/campaigns/{{campaignId}}
+DELETE {{baseURL}}/campaigns/{{campaignId}}

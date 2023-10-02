@@ -32,5 +32,9 @@ func getErrorCode(err error) int {
 		return http.StatusInternalServerError
 	}
 
+	if errors.Is(err, internalErrors.ErrResourceNotFound) {
+		return http.StatusNotFound
+	}
+
 	return http.StatusBadRequest
 }

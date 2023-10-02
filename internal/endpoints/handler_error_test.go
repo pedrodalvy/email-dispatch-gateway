@@ -29,6 +29,24 @@ func Test_HandlerError(t *testing.T) {
 		require.Contains(t, res.Body.String(), internalErrors.ErrInternalServerError.Error())
 	})
 
+	t.Run("should return a resource not found error", func(t *testing.T) {
+		// ARRANGE
+		endpoint := func(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
+			return nil, http.StatusOK, internalErrors.ErrResourceNotFound
+		}
+
+		handlerFunc := HandlerError(endpoint)
+		req, _ := http.NewRequest("GET", "/", nil)
+		res := httptest.NewRecorder()
+
+		// ACT
+		handlerFunc.ServeHTTP(res, req)
+
+		// ASSERT
+		require.Equal(t, http.StatusNotFound, res.Code)
+		require.Contains(t, res.Body.String(), internalErrors.ErrResourceNotFound.Error())
+	})
+
 	t.Run("should return a domain error", func(t *testing.T) {
 		// ARRANGE
 		endpoint := func(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
