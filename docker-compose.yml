@@ -18,3 +18,22 @@ services:
       - POSTGRESQL_DATABASE=email-dispatch-gateway
       - POSTGRESQL_LOG_TIMEZONE=GMT
       - POSTGRESQL_TIMEZONE=GMT
+
+  keycloak:
+    image: docker.io/bitnami/keycloak:22.0.3
+    container_name: keycloak
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      - KEYCLOAK_CREATE_ADMIN_USER=true
+      - KEYCLOAK_ADMIN_USER=user
+      - KEYCLOAK_ADMIN_PASSWORD=bitnami
+      - KEYCLOAK_DATABASE_HOST=postgres
+      - KEYCLOAK_DATABASE_PORT=5432
+      - KEYCLOAK_DATABASE_NAME=keycloak
+      - KEYCLOAK_DATABASE_USER=postgres
+      - KEYCLOAK_DATABASE_PASSWORD=postgres
+      - KEYCLOAK_JDBC_PARAMS=useSSL=false

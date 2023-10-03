@@ -29,3 +29,31 @@ PATCH {{baseURL}}/campaigns/{{campaignId}}/cancel
 ### DELETE /campaigns/:id
 # @no-log
 DELETE {{baseURL}}/campaigns/{{campaignId}}
+
+
+--- KEYCLOAK
+
+
+### Credtentials B2B
+# @no-log
+POST {{kc_baseURL}}/realms/{{kc_Realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=email-dispatch-gateway&
+client_secret=CtOEFFFBJ5VqASEl9E3Ro15WTv4CvOJL&
+grant_type=client_credentials
+
+> {% client.global.set("kc_B2B_accessToken", response.body["access_token"]) %}
+
+
+### Credtentials B2C
+# @no-log
+POST {{kc_baseURL}}/realms/{{kc_Realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=email-dispatch-gateway-users&
+username=dev@email.com&
+password=dev&
+grant_type=password
+
+> {% client.global.set("kc_B2C_accessToken", response.body["access_token"]) %}
