@@ -22,10 +22,18 @@ func main() {
 	campaignService := campaign.NewService(campaignRepository)
 	handler := endpoints.NewHandler(campaignService)
 
-	r.Post("/campaigns", endpoints.HandlerError(handler.CampaignsPost))
-	r.Get("/campaigns/{id}", endpoints.HandlerError(handler.CampaignsGetByID))
-	r.Patch("/campaigns/{id}/cancel", endpoints.HandlerError(handler.CampaignsPatchCancelByID))
-	r.Delete("/campaigns/{id}", endpoints.HandlerError(handler.CampaignsDeleteByID))
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Ok"))
+	})
+
+	r.Route("/campaigns", func(r chi.Router) {
+		r.Use(endpoints.Auth)
+
+		r.Post("/", endpoints.HandlerError(handler.CampaignsPost))
+		r.Get("/{id}", endpoints.HandlerError(handler.CampaignsGetByID))
+		r.Patch("/{id}/cancel", endpoints.HandlerError(handler.CampaignsPatchCancelByID))
+		r.Delete("/{id}", endpoints.HandlerError(handler.CampaignsDeleteByID))
+	})
 
 	http.ListenAndServe(":3000", r)
 }

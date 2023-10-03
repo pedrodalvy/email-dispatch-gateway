@@ -2,6 +2,7 @@
 # @no-log
 POST {{baseURL}}/campaigns
 Content-Type: application/json
+Authorization: Bearer {{kc_B2B_accessToken}}
 
 {
   "name": "Campaign Name",
@@ -19,17 +20,25 @@ Content-Type: application/json
 ### GET /campaigns/:id
 # @no-log
 GET {{baseURL}}/campaigns/{{campaignId}}
+Authorization: Bearer {{kc_B2C_accessToken}}
 
 
 ### PATCH /campaigns/:id/cancel
 # @no-log
 PATCH {{baseURL}}/campaigns/{{campaignId}}/cancel
+Authorization: Bearer {{kc_B2B_accessToken}}
 
 
 ### DELETE /campaigns/:id
 # @no-log
 DELETE {{baseURL}}/campaigns/{{campaignId}}
+Authorization: Bearer {{kc_B2B_accessToken}}
 
+--- Health
+
+### GET /health
+# @no-log
+GET {{baseURL}}/health
 
 --- KEYCLOAK
 
