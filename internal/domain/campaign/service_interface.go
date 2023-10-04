@@ -7,4 +7,5 @@ type ServiceInterface interface {
 	GetByID(id string) (campaignResponse contract.CampaignResponse, err error)
 	CancelByID(id string) (err error)
 	DeleteByID(id string) (err error)
+	StartByID(id string) (err error)
 }

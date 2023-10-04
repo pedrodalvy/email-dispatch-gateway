@@ -185,3 +185,48 @@ func Test_Campaign_Delete(t *testing.T) {
 		require.Equal(t, "campaign status is invalid", err.Error())
 	})
 }
+
+func Test_Campaign_CanSendEmail(t *testing.T) {
+	t.Run("should return true if campaign is pending", func(t *testing.T) {
+		// ARRANGE
+		campaign, _ := NewCampaign(name, content, emails, createdBy)
+
+		// ASSERT
+		require.True(t, campaign.CanSendEmail())
+	})
+
+	t.Run("should return false if campaign is not pending", func(t *testing.T) {
+		// ARRANGE
+		campaign, _ := NewCampaign(name, content, emails, createdBy)
+		campaign.Status = "another"
+
+		// ASSERT
+		require.False(t, campaign.CanSendEmail())
+	})
+}
+
+func Test_Campaign_Finish(t *testing.T) {
+	t.Run("should finish a campaign", func(t *testing.T) {
+		// ARRANGE
+		campaign, _ := NewCampaign(name, content, emails, createdBy)
+
+		// ACT
+		err := campaign.Finish()
+
+		// ASSERT
+		require.Nil(t, err)
+		require.Equal(t, Done, campaign.Status)
+	})
+
+	t.Run("should return an error if campaign status is invalid", func(t *testing.T) {
+		// ARRANGE
+		campaign, _ := NewCampaign(name, content, emails, createdBy)
+		campaign.Status = "another"
+
+		// ACT
+		err := campaign.Finish()
+
+		// ASSERT
+		require.Equal(t, "campaign status is invalid", err.Error())
+	})
+}

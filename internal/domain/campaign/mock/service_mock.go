@@ -95,3 +95,17 @@ func (mr *MockServiceInterfaceMockRecorder) GetByID(id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockServiceInterface)(nil).GetByID), id)
 }
+
+// StartByID mocks base method.
+func (m *MockServiceInterface) StartByID(id string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StartByID", id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StartByID indicates an expected call of StartByID.
+func (mr *MockServiceInterfaceMockRecorder) StartByID(id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartByID", reflect.TypeOf((*MockServiceInterface)(nil).StartByID), id)
+}

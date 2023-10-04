@@ -4,6 +4,7 @@ import (
 	"email-dispatch-gateway/internal/domain/campaign"
 	"email-dispatch-gateway/internal/endpoints"
 	"email-dispatch-gateway/internal/infrastructure/database"
+	"email-dispatch-gateway/internal/infrastructure/mail"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
@@ -26,7 +27,8 @@ func main() {
 
 	db := database.NewDB()
 	campaignRepository := database.NewCampaignRepository(db)
-	campaignService := campaign.NewService(campaignRepository)
+	mailer := mail.NewMailer()
+	campaignService := campaign.NewService(campaignRepository, mailer)
 	handler := endpoints.NewHandler(campaignService)
 
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -39,6 +41,7 @@ func main() {
 		r.Post("/", endpoints.HandlerError(handler.CampaignsPost))
 		r.Get("/{id}", endpoints.HandlerError(handler.CampaignsGetByID))
 		r.Patch("/{id}/cancel", endpoints.HandlerError(handler.CampaignsPatchCancelByID))
+		r.Patch("/{id}/start", endpoints.HandlerError(handler.CampaignsPatchStartByID))
 		r.Delete("/{id}", endpoints.HandlerError(handler.CampaignsDeleteByID))
 	})
 

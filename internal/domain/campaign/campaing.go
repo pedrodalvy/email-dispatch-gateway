@@ -11,6 +11,7 @@ const (
 	Pending  string = "Pending"
 	Canceled string = "Canceled"
 	Deleted  string = "Deleted"
+	Done            = "Done"
 )
 
 type Contact struct {
@@ -70,5 +71,18 @@ func (c *Campaign) Delete() error {
 	}
 
 	c.Status = Deleted
+	return nil
+}
+
+func (c *Campaign) CanSendEmail() bool {
+	return c.Status == Pending
+}
+
+func (c *Campaign) Finish() error {
+	if c.Status != Pending {
+		return errors.New("campaign status is invalid")
+	}
+
+	c.Status = Done
 	return nil
 }

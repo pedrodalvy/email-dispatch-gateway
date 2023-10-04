@@ -29,6 +29,12 @@ PATCH {{baseURL}}/campaigns/{{campaignId}}/cancel
 Authorization: Bearer {{kc_accessToken}}
 
 
+### PATCH /campaigns/:id/start
+# @no-log
+PATCH {{baseURL}}/campaigns/{{campaignId}}/start
+Authorization: Bearer {{kc_accessToken}}
+
+
 ### DELETE /campaigns/:id
 # @no-log
 DELETE {{baseURL}}/campaigns/{{campaignId}}

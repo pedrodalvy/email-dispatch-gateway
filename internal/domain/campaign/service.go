@@ -7,10 +7,11 @@ import (
 
 type Service struct {
 	Repository Repository
+	Mailer     MailerInterface
 }
 
-func NewService(repository Repository) *Service {
-	return &Service{Repository: repository}
+func NewService(repository Repository, mailer MailerInterface) *Service {
+	return &Service{Repository: repository, Mailer: mailer}
 }
 
 func (s *Service) Create(dto contract.NewCampaignDTO) (id string, err error) {
@@ -70,6 +71,29 @@ func (s *Service) DeleteByID(id string) (err error) {
 	}
 
 	if err = s.Repository.Delete(campaign); err != nil {
+		return internalErrors.ErrInternalServerError
+	}
+
+	return nil
+}
+
+func (s *Service) StartByID(id string) (err error) {
+	campaign, err := s.findCampaignByID(id)
+	if err != nil {
+		return err
+	}
+
+	if campaign.CanSendEmail() {
+		if err = s.Mailer.SendMail(campaign); err != nil {
+			return internalErrors.ErrInternalServerError
+		}
+	}
+
+	if err = campaign.Finish(); err != nil {
+		return err
+	}
+
+	if err = s.Repository.Update(campaign); err != nil {
 		return internalErrors.ErrInternalServerError
 	}
 
