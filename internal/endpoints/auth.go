@@ -16,6 +16,8 @@ const (
 	realm = "email-dispatch-gateway"
 )
 
+var newOIDCProvider = oidc.NewProvider
+
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString := r.Header.Get("Authorization")
@@ -27,7 +29,7 @@ func Auth(next http.Handler) http.Handler {
 
 		tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
 
-		provider, err := oidc.NewProvider(r.Context(), fmt.Sprintf("http://localhost:8080/realms/%s", realm))
+		provider, err := newOIDCProvider(r.Context(), fmt.Sprintf("http://localhost:8080/realms/%s", realm))
 		if err != nil {
 			render.Status(r, http.StatusInternalServerError)
 			render.JSON(w, r, map[string]string{"error": internalErrors.ErrInternalServerError.Error()})
