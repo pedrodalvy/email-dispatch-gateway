@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	"bytes"
+	"context"
 	"email-dispatch-gateway/internal/contract"
 	mock "email-dispatch-gateway/internal/domain/campaign/mock"
 	"encoding/json"
@@ -18,9 +19,10 @@ func Test_TestHandler_CampaignsPost(t *testing.T) {
 	defer ctrl.Finish()
 
 	campaignDTO := contract.NewCampaignDTO{
-		Name:    "Test Name",
-		Content: "Test Content",
-		Emails:  []string{"test@domain.com"},
+		Name:      "Test Name",
+		Content:   "Test Content",
+		Emails:    []string{"test@domain.com"},
+		CreatedBy: "test@email.com",
 	}
 	var dtoBuffer bytes.Buffer
 	json.NewEncoder(&dtoBuffer).Encode(campaignDTO)
@@ -36,9 +38,10 @@ func Test_TestHandler_CampaignsPost(t *testing.T) {
 
 		req, _ := http.NewRequest("POST", "/", &dtoBuffer)
 		res := httptest.NewRecorder()
+		ctx := context.WithValue(req.Context(), "email", campaignDTO.CreatedBy)
 
 		// ACT
-		responseData, status, err := handler.CampaignsPost(res, req)
+		responseData, status, err := handler.CampaignsPost(res, req.WithContext(ctx))
 
 		// ASSERT
 		require.Equal(t, map[string]string{"id": campaignID}, responseData)
@@ -53,9 +56,10 @@ func Test_TestHandler_CampaignsPost(t *testing.T) {
 
 		req, _ := http.NewRequest("POST", "/", &dtoBuffer)
 		res := httptest.NewRecorder()
+		ctx := context.WithValue(req.Context(), "email", campaignDTO.CreatedBy)
 
 		// ACT
-		responseData, status, err := handler.CampaignsPost(res, req)
+		responseData, status, err := handler.CampaignsPost(res, req.WithContext(ctx))
 
 		// ASSERT
 		require.Empty(t, responseData)

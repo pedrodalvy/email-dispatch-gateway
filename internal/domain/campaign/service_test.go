@@ -19,9 +19,10 @@ func Test_Service_Create(t *testing.T) {
 	service := campaign.NewService(repository)
 
 	newCampaignDTO := contract.NewCampaignDTO{
-		Name:    "Campaign Name",
-		Content: "Campaign Content",
-		Emails:  []string{"a@domain.com", "b@domain.com"},
+		Name:      "Campaign Name",
+		Content:   "Campaign Content",
+		Emails:    []string{"a@domain.com", "b@domain.com"},
+		CreatedBy: "test@email.com",
 	}
 
 	t.Run("should create campaign", func(t *testing.T) {
@@ -56,6 +57,7 @@ func Test_Service_Create(t *testing.T) {
 			return arguments.(*campaign.Campaign).ID != "" &&
 				arguments.(*campaign.Campaign).Name == newCampaignDTO.Name &&
 				arguments.(*campaign.Campaign).Content == newCampaignDTO.Content &&
+				arguments.(*campaign.Campaign).CreatedBy == newCampaignDTO.CreatedBy &&
 				len(arguments.(*campaign.Campaign).Contacts) == len(newCampaignDTO.Emails)
 		})).Return(nil)
 
@@ -89,19 +91,19 @@ func Test_Service_GetByID(t *testing.T) {
 
 	t.Run("should return a campaign", func(t *testing.T) {
 		// ARRANGE
-		newCampaign, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"}, "test@email.com")
 		expectedCampaign := contract.CampaignResponse{
-			ID:                   newCampaign.ID,
-			Name:                 newCampaign.Name,
-			Content:              newCampaign.Content,
-			Status:               newCampaign.Status,
-			AmountOfEmailsToSend: len(newCampaign.Contacts),
+			ID:                   c.ID,
+			Name:                 c.Name,
+			Content:              c.Content,
+			Status:               c.Status,
+			AmountOfEmailsToSend: len(c.Contacts),
 		}
 
-		repository.EXPECT().GetByID(gomock.Eq(newCampaign.ID)).Return(newCampaign, nil)
+		repository.EXPECT().GetByID(gomock.Eq(c.ID)).Return(c, nil)
 
 		// ACT
-		receivedCampaign, err := service.GetByID(newCampaign.ID)
+		receivedCampaign, err := service.GetByID(c.ID)
 
 		// ASSERT
 		require.Equal(t, expectedCampaign, receivedCampaign)
@@ -142,7 +144,7 @@ func Test_Service_CancelByID(t *testing.T) {
 
 	t.Run("should cancel a campaign", func(t *testing.T) {
 		// ARRANGE
-		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"}, "test@email.com")
 		repository.EXPECT().GetByID(gomock.Eq(c.ID)).Return(c, nil)
 		repository.EXPECT().Update(gomock.Eq(c)).Return(nil)
 
@@ -167,7 +169,7 @@ func Test_Service_CancelByID(t *testing.T) {
 
 	t.Run("should return a domain error", func(t *testing.T) {
 		// ARRANGE
-		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"}, "test@email.com")
 		c.Cancel()
 		repository.EXPECT().GetByID(gomock.Eq(c.ID)).Return(c, nil)
 
@@ -181,7 +183,7 @@ func Test_Service_CancelByID(t *testing.T) {
 
 	t.Run("should return an internal server error if repository.Update returns an error", func(t *testing.T) {
 		// ARRANGE
-		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"}, "test@email.com")
 		repository.EXPECT().GetByID(gomock.Eq(c.ID)).Return(c, nil)
 		repository.EXPECT().Update(gomock.Eq(c)).Return(errors.New("any repository error"))
 
@@ -213,7 +215,7 @@ func Test_Service_DeleteByID(t *testing.T) {
 
 	t.Run("should delete a campaign", func(t *testing.T) {
 		// ARRANGE
-		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"}, "test@email.com")
 		repository.EXPECT().GetByID(gomock.Eq(c.ID)).Return(c, nil)
 		repository.EXPECT().Delete(gomock.Eq(c)).Return(nil)
 
@@ -238,7 +240,7 @@ func Test_Service_DeleteByID(t *testing.T) {
 
 	t.Run("should return a domain error", func(t *testing.T) {
 		// ARRANGE
-		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"}, "test@email.com")
 		c.Status = "another"
 		repository.EXPECT().GetByID(gomock.Eq(c.ID)).Return(c, nil)
 
@@ -252,7 +254,7 @@ func Test_Service_DeleteByID(t *testing.T) {
 
 	t.Run("should return an internal server error if repository.Delete returns an error", func(t *testing.T) {
 		// ARRANGE
-		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"})
+		c, _ := campaign.NewCampaign("Campaign Name", "Campaign Content", []string{"a@domain.com"}, "test@email.com")
 		repository.EXPECT().GetByID(gomock.Eq(c.ID)).Return(c, nil)
 		repository.EXPECT().Delete(gomock.Eq(c)).Return(errors.New("any repository error"))
 

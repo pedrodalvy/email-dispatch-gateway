@@ -10,6 +10,9 @@ func (h *Handler) CampaignsPost(_ http.ResponseWriter, r *http.Request) (respons
 	var campaignDTO contract.NewCampaignDTO
 	render.DecodeJSON(r.Body, &campaignDTO)
 
+	userEmail := r.Context().Value("email").(string)
+	campaignDTO.CreatedBy = userEmail
+
 	id, err := h.CampaignService.Create(campaignDTO)
 	if err == nil {
 		responseData = map[string]string{"id": id}

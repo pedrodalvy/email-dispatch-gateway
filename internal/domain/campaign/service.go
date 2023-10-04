@@ -14,7 +14,7 @@ func NewService(repository Repository) *Service {
 }
 
 func (s *Service) Create(dto contract.NewCampaignDTO) (id string, err error) {
-	campaign, err := NewCampaign(dto.Name, dto.Content, dto.Emails)
+	campaign, err := NewCampaign(dto.Name, dto.Content, dto.Emails, dto.CreatedBy)
 	if err != nil {
 		return "", err
 	}
