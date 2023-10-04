@@ -3,17 +3,12 @@ package endpoints
 import (
 	"context"
 	internalErrors "email-dispatch-gateway/internal/internal-errors"
-	"fmt"
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/go-chi/render"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
+	"os"
 	"strings"
-)
-
-const (
-	aud   = "email-dispatch-gateway"
-	realm = "email-dispatch-gateway"
 )
 
 var newOIDCProvider = oidc.NewProvider
@@ -29,14 +24,14 @@ func Auth(next http.Handler) http.Handler {
 
 		tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
 
-		provider, err := newOIDCProvider(r.Context(), fmt.Sprintf("http://localhost:8080/realms/%s", realm))
+		provider, err := newOIDCProvider(r.Context(), os.Getenv("KEYCLOAK_ISSUER"))
 		if err != nil {
 			render.Status(r, http.StatusInternalServerError)
 			render.JSON(w, r, map[string]string{"error": internalErrors.ErrInternalServerError.Error()})
 			return
 		}
 
-		verifier := provider.Verifier(&oidc.Config{ClientID: aud})
+		verifier := provider.Verifier(&oidc.Config{ClientID: os.Getenv("KEYCLOAK_AUD")})
 		_, err = verifier.Verify(r.Context(), tokenString)
 		if err != nil {
 			render.Status(r, http.StatusUnauthorized)

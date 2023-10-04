@@ -4,11 +4,11 @@ import (
 	"email-dispatch-gateway/internal/domain/campaign"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"os"
 )
 
 func NewDB() *gorm.DB {
-	dsn := "host=localhost user=postgres password=postgres dbname=email-dispatch-gateway port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(os.Getenv("DATA_SOURCE_NAME")), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
