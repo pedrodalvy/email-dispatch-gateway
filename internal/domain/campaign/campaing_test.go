@@ -85,7 +85,7 @@ func Test_Campaign_NewCampaign(t *testing.T) {
 		require.Empty(t, campaign)
 	})
 
-	t.Run("should validate if contacts has less than 1", func(t *testing.T) {
+	t.Run("should validate if the campaign has less than 1 contact", func(t *testing.T) {
 		// ACT
 		campaign, err := NewCampaign(name, content, []string{}, createdBy)
 
@@ -160,7 +160,7 @@ func Test_Campaign_Delete(t *testing.T) {
 		require.Equal(t, Deleted, campaign.Status)
 	})
 
-	t.Run("should delete a cancelled campaign", func(t *testing.T) {
+	t.Run("should delete a canceled campaign", func(t *testing.T) {
 		// ARRANGE
 		campaign, _ := NewCampaign(name, content, emails, createdBy)
 		campaign.Cancel()
