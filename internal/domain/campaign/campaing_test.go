@@ -143,7 +143,7 @@ func Test_Campaign_Cancel(t *testing.T) {
 		err := campaign.Cancel()
 
 		// ASSERT
-		require.Equal(t, "campaign status is invalid", err.Error())
+		require.Equal(t, "campaign status must be pending to be canceled", err.Error())
 	})
 }
 
@@ -182,7 +182,7 @@ func Test_Campaign_Delete(t *testing.T) {
 		err := campaign.Delete()
 
 		// ASSERT
-		require.Equal(t, "campaign status is invalid", err.Error())
+		require.Equal(t, "campaign status must be pending or canceled to be deleted", err.Error())
 	})
 }
 
@@ -227,6 +227,6 @@ func Test_Campaign_Finish(t *testing.T) {
 		err := campaign.Finish()
 
 		// ASSERT
-		require.Equal(t, "campaign status is invalid", err.Error())
+		require.Equal(t, "campaign status must be pending to be finished", err.Error())
 	})
 }

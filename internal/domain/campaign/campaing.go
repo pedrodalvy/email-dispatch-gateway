@@ -58,7 +58,7 @@ func NewCampaign(name string, content string, emails []string, createdBy string)
 
 func (c *Campaign) Cancel() error {
 	if c.Status != Pending {
-		return errors.New("campaign status is invalid")
+		return errors.New("campaign status must be pending to be canceled")
 	}
 
 	c.Status = Canceled
@@ -67,7 +67,7 @@ func (c *Campaign) Cancel() error {
 
 func (c *Campaign) Delete() error {
 	if c.Status != Pending && c.Status != Canceled {
-		return errors.New("campaign status is invalid")
+		return errors.New("campaign status must be pending or canceled to be deleted")
 	}
 
 	c.Status = Deleted
@@ -80,7 +80,7 @@ func (c *Campaign) CanSendEmail() bool {
 
 func (c *Campaign) Finish() error {
 	if c.Status != Pending {
-		return errors.New("campaign status is invalid")
+		return errors.New("campaign status must be pending to be finished")
 	}
 
 	c.Status = Done
