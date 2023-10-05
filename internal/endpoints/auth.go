@@ -16,13 +16,12 @@ var newOIDCProvider = oidc.NewProvider
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString := r.Header.Get("Authorization")
+		tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
 		if tokenString == "" {
 			render.Status(r, http.StatusUnauthorized)
 			render.JSON(w, r, map[string]string{"error": "request does not contain an authorization header"})
 			return
 		}
-
-		tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
 
 		provider, err := newOIDCProvider(r.Context(), os.Getenv("KEYCLOAK_ISSUER"))
 		if err != nil {
@@ -39,10 +38,16 @@ func Auth(next http.Handler) http.Handler {
 			return
 		}
 
-		parsedToken, _ := jwt.Parse(tokenString, nil)
-		claims := parsedToken.Claims.(jwt.MapClaims)
-		ctx := context.WithValue(r.Context(), "email", claims["email"])
+		email := extractUserEmail(tokenString)
+		ctx := context.WithValue(r.Context(), "email", email)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func extractUserEmail(tokenString string) string {
+	parsedToken, _ := jwt.Parse(tokenString, nil)
+	claims := parsedToken.Claims.(jwt.MapClaims)
+
+	return claims["email"].(string)
 }
