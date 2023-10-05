@@ -43,16 +43,14 @@ func Test_Handler_CampaignsDeleteByID(t *testing.T) {
 
 	t.Run("should return an error when the service returns an error", func(t *testing.T) {
 		// ARRANGE
-		campaignID := "any"
-
-		service.EXPECT().DeleteByID(gomock.Eq(campaignID)).Return(errors.New("any service error"))
+		service.EXPECT().DeleteByID(gomock.Any()).Return(errors.New("any service error"))
 		handler := NewHandler(service)
 
 		res := httptest.NewRecorder()
 		req, _ := http.NewRequest("DELETE", "/", nil)
 
 		chiContext := chi.NewRouteContext()
-		chiContext.URLParams.Add("id", campaignID)
+		chiContext.URLParams.Add("id", "campaignID")
 		req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, chiContext))
 
 		// ACT

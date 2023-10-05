@@ -57,7 +57,7 @@ func Test_Handler_CampaignsGetByID(t *testing.T) {
 		req, _ := http.NewRequest("POST", "/", nil)
 
 		chiContext := chi.NewRouteContext()
-		chiContext.URLParams.Add("id", "any id")
+		chiContext.URLParams.Add("id", "campaignID")
 		req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, chiContext))
 
 		// ACT
