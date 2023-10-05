@@ -1,6 +1,6 @@
 package campaign
 
-type Repository interface {
+type RepositoryInterface interface {
 	Create(campaign *Campaign) error
 	GetByID(id string) (campaign *Campaign, err error)
 	Update(campaign *Campaign) error

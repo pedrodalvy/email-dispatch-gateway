@@ -15,7 +15,7 @@ func Test_Service_Create(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	repository := mock.NewMockRepository(ctrl)
+	repository := mock.NewMockRepositoryInterface(ctrl)
 	mailer := mock.NewMockMailerInterface(ctrl)
 	service := campaign.NewService(repository, mailer)
 
@@ -52,7 +52,7 @@ func Test_Service_Create(t *testing.T) {
 		require.NotEqual(t, internalErrors.ErrInternalServerError, err)
 	})
 
-	t.Run("should call Repository.Create with correct arguments", func(t *testing.T) {
+	t.Run("should call RepositoryInterface.Create with correct arguments", func(t *testing.T) {
 		// ARRANGE
 		repository.EXPECT().Create(gomock.Cond(func(arguments any) bool {
 			return arguments.(*campaign.Campaign).ID != "" &&
@@ -87,7 +87,7 @@ func Test_Service_GetByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	repository := mock.NewMockRepository(ctrl)
+	repository := mock.NewMockRepositoryInterface(ctrl)
 	mailer := mock.NewMockMailerInterface(ctrl)
 	service := campaign.NewService(repository, mailer)
 
@@ -141,7 +141,7 @@ func Test_Service_CancelByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	repository := mock.NewMockRepository(ctrl)
+	repository := mock.NewMockRepositoryInterface(ctrl)
 	mailer := mock.NewMockMailerInterface(ctrl)
 	service := campaign.NewService(repository, mailer)
 
@@ -213,7 +213,7 @@ func Test_Service_DeleteByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	repository := mock.NewMockRepository(ctrl)
+	repository := mock.NewMockRepositoryInterface(ctrl)
 	mailer := mock.NewMockMailerInterface(ctrl)
 	service := campaign.NewService(repository, mailer)
 
@@ -286,7 +286,7 @@ func Test_Service_Start(t *testing.T) {
 	defer ctrl.Finish()
 
 	mailer := mock.NewMockMailerInterface(ctrl)
-	repository := mock.NewMockRepository(ctrl)
+	repository := mock.NewMockRepositoryInterface(ctrl)
 	service := campaign.NewService(repository, mailer)
 
 	t.Run("should start a campaign", func(t *testing.T) {

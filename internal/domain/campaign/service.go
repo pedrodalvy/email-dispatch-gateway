@@ -6,11 +6,11 @@ import (
 )
 
 type Service struct {
-	Repository Repository
+	Repository RepositoryInterface
 	Mailer     MailerInterface
 }
 
-func NewService(repository Repository, mailer MailerInterface) *Service {
+func NewService(repository RepositoryInterface, mailer MailerInterface) *Service {
 	return &Service{Repository: repository, Mailer: mailer}
 }
 
