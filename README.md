@@ -1,5 +1,9 @@
 # Email Dispatch Gateway
 
+[![GitHub Actions][github-image]][github-url]
+[![DeepSource][deepsource-image]][deepsource-url]
+[![codecov][codecov-image]][codecov-url]
+
 This repository was developed as part of the
 "[Go (Golang) - Do zero ao avançado](https://www.udemy.com/course/golang-do-zero-ao-avancado/)" course
 on [Udemy](https://www.udemy.com/). The project consists of an API that serves as a gateway for sending emails. It
@@ -44,3 +48,10 @@ To execute the tests, use the following command:
 ```shell
 go test ./... --cover
 ```
+
+[github-image]: https://github.com/pedrodalvy/email-dispatch-gateway/actions/workflows/go.yml/badge.svg
+[github-url]: https://github.com/pedrodalvy/email-dispatch-gateway/actions
+[codecov-image]: https://codecov.io/gh/pedrodalvy/email-dispatch-gateway/graph/badge.svg?token=6AjHYduoTR
+[codecov-url]: https://codecov.io/gh/pedrodalvy/email-dispatch-gateway
+[deepsource-image]: https://app.deepsource.com/gh/pedrodalvy/email-dispatch-gateway.svg/?label=active+issues&show_trend=false&token=5my1B2qxqBG--6Jc2-xyfFOv
+[deepsource-url]: https://app.deepsource.com/gh/pedrodalvy/email-dispatch-gateway/
