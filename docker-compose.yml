@@ -37,3 +37,13 @@ services:
       - KEYCLOAK_DATABASE_USER=postgres
       - KEYCLOAK_DATABASE_PASSWORD=postgres
       - KEYCLOAK_JDBC_PARAMS=useSSL=false
+
+  server:
+    container_name: server
+    build:
+      context: .
+    ports:
+      - '${PORT:-3000}:3000'
+    depends_on:
+      - keycloak
+      - postgres

@@ -30,7 +30,10 @@ func Auth(next http.Handler) http.Handler {
 			return
 		}
 
-		verifier := provider.Verifier(&oidc.Config{ClientID: os.Getenv("KEYCLOAK_AUD")})
+		verifier := provider.Verifier(&oidc.Config{
+			ClientID:        os.Getenv("KEYCLOAK_AUD"),
+			SkipIssuerCheck: os.Getenv("KEYCLOAK_SKIP_ISSUER_CHECK") == "true",
+		})
 		_, err = verifier.Verify(r.Context(), tokenString)
 		if err != nil {
 			render.Status(r, http.StatusUnauthorized)
